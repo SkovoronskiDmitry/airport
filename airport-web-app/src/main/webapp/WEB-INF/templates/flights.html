@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+          href="../../resources/static/css/font-awesome.min.css"
+          th:href="@{/resources/static/css/font-awesome.min.css}">
+    <link rel="stylesheet"
+          href="../../resources/static/css/bootstrap.css"
+          th:href="@{/resources/static/css/bootstrap.css}">
+    <link rel="stylesheet"
+          href="../../resources/static/css/style.css"
+          th:href="@{/resources/static/css/style.css}">
+    <title>Flights</title>
+</head>
+<body>
+
+<header>
+    <nav class="pl-2 navbar navbar-expand-sm navbar-dark" style="background-color: #1e11b9;">
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a href="/" class="navbar-brand"><img src="../../resources/static/img/flight.png"
+                                              th:src="@{/resources/static/img/flight.png}"
+                                              height="32" width="32" alt="HR"></a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <a class="nav-item nav-link active"
+                   href="flights.html"
+                   th:href="@{/flights}">Flights</a>
+                <a class="nav-item nav-link"
+                   href="passengers.html"
+                   th:href="@{/passengers}">Passengers</a>
+            </ul>
+        </div>
+    </nav>
+    <nav id="main-header"
+         class="py-1 mb-3 navbar navbar-expand-sm navbar-light bg-light text-dark" >
+        <span class="navbar-brand text-uppercase mr-auto">Flights</span>
+        <ul class="navbar-nav float-right">
+            <li class="nav-item">
+                <a href="flight.html"
+                   th:href="@{/flights/add}"
+                   class="btn btn-light"
+                   title="Add flight"
+                   data-toggle="tooltip"
+                   data-placement="bottom">
+                    <i class="fa fa-plus"></i> <span
+                        class="d-none d-sm-inline">Add</span></a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<section id="flights">
+    <div class="container-fluid" >
+        <!--Filter-->
+        <div class="container row align-items-center"  >
+            <form class="form-inline">
+                <div class="input-group-addon">
+                    <span class="input-group-text">FROM:</span>
+                </div>
+                <input type="date" class="form-control my-sm-1"
+                       id="dateFrom" name="dateFrom" placeholder="Date" required="">
+
+                <div class="input-group-addon">
+                    <span class="input-group-text">TO</span>
+                </div>
+                <input type="date" class="form-control my-sm-1"
+                       id="dateTo" name="dateTo" placeholder="Date" required="" >
+                <div class="btn btn-light"
+                     title="Find flights"
+                     data-toggle="tooltip"
+                     data-placement="bottom">
+                    <button class="d-none d-sm-inline">Find</button> </div>
+
+            </form>
+        </div>
+        <div class="row" >
+            <div class="col" >
+                <div class="card" >
+
+                    <table class="table table-striped" >
+                        <thead class="text-light" style="background-color: #1e11b9;">
+                        <tr>
+                            <th>№ flight</th>
+                            <th>direction</th>
+                            <th>date flight</th>
+                            <th>quantity passengers</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="flight : ${flights}">
+                            <td th:text="${flight.flightId}">101</td>
+                            <td th:text="${flight.direction}">Minsk-Berlin</td>
+                            <td th:text="${flight.dateFlight}">11.04.2020</td>
+                            <td th:text="${flight.quantityPassengers}">4</td>
+                            <td class="text-right">
+                                <a href="flight.html"
+                                   th:href="@{|/flights/${flight.flightId}|}"
+                                   class="btn-sm btn-outline-secondary"
+                                   title="Edit flight"
+                                   data-toggle="tooltip"
+                                   data-placement="top">
+                                    <i class="fa fa-pencil"></i> <span
+                                        class="d-none d-md-inline">Edit</span></a>
+                                <span data-toggle="modal"
+                                      data-target="#deleteDialog"
+                                      th:attr="data-id=${flight.flightId},data-name=${flight.direction}">
+                                <a href="#" class="btn-sm btn-outline-secondary"
+                                   title="delete flight"
+                                   data-toggle="tooltip"
+                                   data-placement="top">
+                                    <i class="fa fa-remove"></i> <span class="d-none d-md-inline">Delete</span></a>
+                                </span>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <hr/>
+    <p class="text-center">AIRLINES <img src="../../resources/static/img/24-7.png"
+                                         th:src="@{/resources/static/img/24-7.png}"
+                                         height="32" width="38" alt="HR"> DSKOVORONSKI</p>
+</footer>
+
+<!-- Confirm delete Modal -->
+<div class="modal fade" id="deleteDialog" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header alert-danger">
+                <h5 class="modal-title" id="exampleModalLabel">Delete flight</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Please confirm delete
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a id="deleteUrl" href="#" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../resources/static/js/jquery-3.4.1.slim.min.js"
+        th:src="@{/resources/static/js/jquery-3.4.1.slim.min.js}"></script>
+<script src="../../resources/static/js/popper.min.js"
+        th:src="@{/resources/static/js/popper.min.js}"></script>
+<script src="../../resources/static/js/bootstrap.min.js"
+        th:src="@{/resources/static/js/bootstrap.min.js}"></script>
+<script>
+    $('#deleteDialog').on('show.bs.modal', function (event) {
+        var target = $(event.relatedTarget)
+        $(this).find('.modal-body').text('Please confirm delete flight: "' + target.data('name') + '"')
+        document.getElementById('deleteUrl').href = '/flights/' + target.data('id') + '/delete';
+    })
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
+</body>
+</html>

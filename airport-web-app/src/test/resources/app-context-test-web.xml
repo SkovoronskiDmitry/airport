@@ -1,0 +1,90 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- Use spring servlet for all requests, including static resources -->
+    <mvc:default-servlet-handler/>
+
+    <!-- Use @MVC annotations -->
+    <mvc:annotation-driven/>
+
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
+
+    <!-- Component scan for @Controller, @Service... annotations -->
+    <context:component-scan base-package="com.myproject.*"/>
+
+    <import resource="classpath*:test-db.xml"/>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:application.properties</value>
+                <value>classpath:dao.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+        <bean id="passengerService" class="com.myproject.PassengerServiceImpl">
+            <constructor-arg ref="passengerDao"/>
+        </bean>
+
+        <bean id="passengerDao" class="com.myproject.jdbc.PassengerDaoJdbc">
+            <constructor-arg ref="namedParameterJdbcTemplate"/>
+        </bean>
+
+        <bean id="flightService" class="com.myproject.FlightServiceImpl">
+            <constructor-arg ref="flightDao"/>
+        </bean>
+
+        <bean id="flightDao" class="com.myproject.jdbc.FlightDaoJdbc">
+            <constructor-arg ref="namedParameterJdbcTemplate"/>
+        </bean>
+
+        <bean id="flightDtoService" class="com.myproject.FlightDtoServiceImpl">
+            <constructor-arg ref="flightDtoDao"/>
+        </bean>
+
+        <bean id="flightDtoDao" class="com.myproject.jdbc.FlightDtoDaoJdbc">
+            <constructor-arg ref="namedParameterJdbcTemplate"/>
+        </bean>
+
+        <bean id="namedParameterJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+            <constructor-arg name="dataSource" ref="dataSource"/>
+        </bean>
+
+    <!-- Thymeleaf Template Resolver -->
+    <bean id="templateResolver"
+          class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
+        <property name="prefix" value="/WEB-INF/templates/" />
+        <property name="suffix" value=".html" />
+        <property name="templateMode" value="HTML" />
+        <!-- Template cache is true by default. Set to false if you want             -->
+        <!-- templates to be automatically updated when modified.                    -->
+        <property name="cacheable" value="false" />
+    </bean>
+
+    <!-- Thymeleaf Template Engine (Spring5-specific version) -->
+    <bean id="templateEngine"
+          class="org.thymeleaf.spring5.SpringTemplateEngine">
+        <property name="templateResolvers">
+            <set>
+                <ref bean="templateResolver" />
+            </set>
+        </property>
+    </bean>
+
+    <!-- Thymeleaf View Resolver - implementation of Spring's ViewResolver interface -->
+    <bean id="viewResolver" class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
+        <property name="characterEncoding" value="UTF-8" />
+    </bean>
+
+</beans>

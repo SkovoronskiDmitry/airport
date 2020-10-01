@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="FlightDao" class="com.myproject.jdbc.FlightDaoJdbc">
+        <constructor-arg ref="jdbcTemplate"/>
+    </bean>
+
+    <bean id="FlightDtoDao" class="com.myproject.jdbc.FlightDtoDaoJdbc">
+        <constructor-arg ref="jdbcTemplate"/>
+    </bean>
+
+    <bean id="PassengerDao" class="com.myproject.jdbc.PassengerDaoJdbc">
+        <constructor-arg ref="jdbcTemplate"/>
+    </bean>
+
+    <bean id="FlightService" class="com.myproject.FlightServiceImpl">
+        <constructor-arg ref="FlightDao"/>
+    </bean>
+
+    <bean id="FlightDtoService" class="com.myproject.FlightDtoServiceImpl">
+        <constructor-arg ref="FlightDtoDao"/>
+    </bean>
+
+    <bean id="PassengerService" class="com.myproject.PassengerServiceImpl">
+        <constructor-arg ref="PassengerDao"/>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
+</beans>
